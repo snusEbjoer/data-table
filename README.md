@@ -1,27 +1,113 @@
-# React + TypeScript + Vite
+[![Netlify Status](https://api.netlify.com/api/v1/badges/e329e9f4-e50d-46db-b52d-b4aebb790a11/deploy-status)](https://app.netlify.com/sites/data-table-test/deploys)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Data Table
 
-Currently, two official plugins are available:
+Реализация [Тестового Задания](https://github.com/fugr-ru/frontend-javascript-test) по работе с таблицами
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Запуск Локально
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+```shell
+$ npm install
+$ npm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+**Демо можно посмотреть [Здесь](https://data-table-test.netlify.app/)**
+
+## Задание
+
+Необходимо разработать React-приложение для отображения таблицы с данными.
+Дополнительным плюсом будет: Финальный билд приложения должен быть запускаться из __Docker контейнера__ (хотябы с минимальной конфигурацией)
+
+__Функционал__
+
+- Сортировка по столбцам: при нажатии на название столбца строки таблицы сортируются по возрастанию, при повторном клике &mdash; по убыванию. Графическим элементом или текстовым сообщением указывается направление сортировки.
+- Клиентская пагинация: данные необходимо отображать постранично, максимум 50 элементов на страницу. Необходимо предоставить пользовательскую навигацию для перехода по страницам.
+- Фильтрация: компонент предоставляет текстовое поле, в которое пользователь может ввести текст и строки таблицы, данные которых не содержат подстроку, введённую пользователем, скрываются. Перефильтрация осуществляется по нажатию на кнопку "Найти".
+- По клике на строку таблицы значения полей выводятся в дополнительном блоке под таблицей.
+- Данные в таблицу загружаются с сервера. Способ загрузки с сервера на ваш выбор.
+- Над таблицей присутсвует кнопка __добавить__, по нажатии на которую выпадает форма добавления ряда. ДЛЯ КАЖДОГО ПОЛЯ ДОБАВЬТЕ ВАЛИДАЦИЮ(id — число, firstName, lastName — буквы, email — формат email, phone — маска телефона).
+```
+
+	+------+------------+-----------------+-----------------+---------------+
+	| id   | firstName  | lastName        | email           | phone         |
+	+------+------------+-----------------+-----------------+---------------+
+	|input | input      | input           | input           | input         |
+	+------+------------+-----------------+-----------------+---------------+
+	
+```
+
+- После заполнения всех инпутов активируется кнопка __Добавить в таблицу__ которая вставляет заполненный ряд в начало таблицы
+  
+
+Для демонстрации работы компонента необходимо сделать простую HTML страницу.
+Пользователю предлагается выбрать набор данных: маленький или большой.
+При выборе набора данных он загружается с сервера и по данным строится таблица.
+
+__Формат данных от сервера__
+
+Сервер возвращает JSON-массив данных.
+Пример данных: 
+```js
+[
+	{
+		id: 101,
+		firstName: 'Sue',
+		lastName: 'Corson',
+		email: 'DWhalley@in.gov',
+		phone: '(612)211-6296',
+		address: {
+			streetAddress: '9792 Mattis Ct',
+			city: 'Waukesha',
+			state: 'WI',
+			zip: '22178'
+		},
+		description: 'et lacus magna dolor...',
+	}
+}
+```
+
+Маленький объем данных берется по ссылке
+http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}
+
+Большой объем данных берется по ссылке
+http://www.filltext.com/?rows=1000&id={number|1000}&firstName={firstName}&delay=3&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}
+
+__Замечания__
+
+- Особое внимание следует уделить скорости работы. Зависание интерфейса при выполнении операций загрузки данных, фильтрации, сортировки недопустимо.
+- Плюсом будет использование TypeScript
+- Во время загрузки данных стоит показать какой-то индикатор
+- Использование сторонних библиотек будет плюсом только в случае если это оправданно и вы сможете объяснить причину выбора. Показав свои знания в грамотном применении сторонних готовых решений, вы имеете шанс повысить свою профессиональную привлекательность для нас.
+- Пишите код так, как бы вы его писали в работе &mdash; внутренности задания будут оцениваться даже тщательней, чем внешнее соответствие заданию. Код должен быть организован так, чтобы его можно было заново использовать.
+- Помните про обработку ошибок!
+- Верстка может быть самая простая. Визуализацию и украшение делайте на ваш вкус. Мы не против использования [Bootstrap](http://getbootstrap.com/) или похожего UI фреймворк, но только для UI представления (нельзя использовать JS код для решения задачи, но можно использовать для оформительских эффектов (анимации и тому подобное))!
+
+__Схема визуального представления данных__
+
+```
++------+------------+-----------------+-----------------+---------------+
+| id ▲ | firstName ▼| lastName      ▼ | email          ▼| phone        ▼|
++------+------------+-----------------+-----------------+---------------+
+| 101  | Sue        | Corson          | DWhalley@in.gov | (612)211-6296 |
++------+------------+-----------------+-----------------+---------------+
+| 102  | Lor        | Ipsumd          | dwhalley@in.gov | (612)211-6296 |
++------+------------+-----------------+-----------------+---------------+
+| 103  | Ips        | Umdolo          | dwhalley@in.gov | (612)211-6296 |
++------+------------+-----------------+-----------------+---------------+
+```
+
+Если выделен пользователем с `id = 101`, то под таблицей выводим следующую информацию:
+
+	Выбран пользователь <b>Sue Corson</b>
+	Описание:
+	<textarea>
+	et lacus magna dolor...
+	</textarea>
+	Адрес проживания: <b>9792 Mattis Ct</b>
+	Город: <b>Waukesha</b>
+	Провинция/штат: <b>WI</b>
+	Индекс: <b>22178</b>
+
+Дополнительно напишите нам, как вы тестировали результат своей работы. Какие используете инструменты и как вы осуществляете тестирование.
+
+---
